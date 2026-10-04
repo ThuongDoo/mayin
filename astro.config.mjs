@@ -9,8 +9,8 @@ import keystatic from '@keystatic/astro';
 const isDev = process.argv.includes('dev');
 
 export default defineConfig({
-  // ĐỔI thành tên miền thật của bạn (dùng cho sitemap, canonical, chia sẻ mạng xã hội)
-  site: 'https://www.example.com',
+  // Tên miền chính (dùng cho sitemap, canonical, chia sẻ mạng xã hội)
+  site: 'https://napmuctannoi.nayva.vn',
   // URL thống nhất không có dấu "/" cuối (/bang-gia) – canonical, sitemap và link nội bộ khớp nhau
   trailingSlash: 'never',
   build: { format: 'file' },

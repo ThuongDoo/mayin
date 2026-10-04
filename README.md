@@ -39,13 +39,13 @@ Bấm **Save** trong CMS là file nội dung được lưu ngay vào thư mục 
 
 Xem **[SEO.md](SEO.md)** – checklist các việc cần làm để lên top (Google Business Profile, đánh giá, Search Console, lịch viết blog).
 
-## Đưa lên mạng (miễn phí)
+## Đưa lên mạng
 
-1. Đẩy thư mục này lên GitHub.
-2. Kết nối repo với **Cloudflare Pages**, **Netlify** hoặc **Vercel**:
-   - Build command: `npm run build`
-   - Output directory: `dist`
-3. Gắn tên miền, rồi khai báo `https://tên-miền/sitemap-index.xml` trong Google Search Console.
+Web đang chạy trên **Vercel** tại https://napmuctannoi.nayva.vn (repo GitHub `ThuongDoo/mayin`, nhánh `main`).
+Cấu hình Vercel nằm trong [vercel.json](vercel.json) – `cleanUrls` bắt buộc phải bật, nếu tắt thì mọi trang con sẽ lỗi 404.
+
+Đổi tên miền: sửa `site` trong [astro.config.mjs](astro.config.mjs).
+Sitemap khai báo với Google Search Console: `https://napmuctannoi.nayva.vn/sitemap-index.xml`
 
 Quy trình viết bài sau này: `npm run dev` → viết trong `/keystatic` → `git commit` + `git push` → web tự cập nhật sau 1–2 phút.
 
