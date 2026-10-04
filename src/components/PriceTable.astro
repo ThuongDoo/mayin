@@ -1,0 +1,13 @@
+---
+import { pricing } from '../lib/site';
+---
+<div class="ptable">
+  <div class="prow phead"><span class="name">Dịch vụ</span><span class="val">Giá từ</span></div>
+  {pricing.items.map((i) => (
+    <div class="prow">
+      <span class="name">{i.name}{i.note && <small>{i.note}</small>}</span>
+      <span class="val">{i.price}</span>
+    </div>
+  ))}
+</div>
+{pricing.note && <p class="pnote">* {pricing.note}</p>}

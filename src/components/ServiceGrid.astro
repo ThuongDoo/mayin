@@ -1,0 +1,16 @@
+---
+import Icon from './Icon.astro';
+import { getServices } from '../lib/site';
+interface Props { exclude?: string }
+const services = (await getServices()).filter((s) => s.id !== Astro.props.exclude);
+---
+<div class="grid-3">
+  {services.map((s) => (
+    <a class="svc" href={`/dich-vu/${s.id}`}>
+      <div class="ic"><Icon name={s.data.icon} /></div>
+      <h3>{s.data.title}</h3>
+      <p>{s.data.shortDesc}</p>
+      <span class="svc-more">{s.data.priceFrom && <b>Từ {s.data.priceFrom}</b>}<span>Xem chi tiết <Icon name="arrow" /></span></span>
+    </a>
+  ))}
+</div>

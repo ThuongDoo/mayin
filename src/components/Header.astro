@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro';
+import { settings, telHref } from '../lib/site';
+
+const links = [
+  { href: '/dich-vu', label: 'Dịch vụ' },
+  { href: '/bang-gia', label: 'Bảng giá' },
+  { href: '/nap-muc', label: 'Mã hộp mực' },
+  { href: '/khu-vuc', label: 'Khu vực' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/lien-he', label: 'Liên hệ' },
+];
+const path = Astro.url.pathname;
+---
+<header class="topbar">
+  <div class="wrap">
+    <a href="/" class="logo"><span class="logo-mark"><Icon name="printer" /></span>{settings.brand}</a>
+    <nav class="nav" aria-label="Menu chính">
+      {links.map((l) => <a href={l.href} class:list={{ active: path.startsWith(l.href) }}>{l.label}</a>)}
+    </nav>
+    <a class="top-phone" href={telHref} aria-label={`Gọi ${settings.phoneText}`}><Icon name="phone" /><span>{settings.phoneText}</span></a>
+  </div>
+</header>

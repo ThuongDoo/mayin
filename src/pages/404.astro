@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaButtons from '../components/CtaButtons.astro';
+---
+<Base title="Không tìm thấy trang" noindex>
+  <section>
+    <div class="wrap" style="text-align:center">
+      <h1 style="font-size:64px;font-weight:800;color:var(--brand)">404</h1>
+      <p class="sub">Trang bạn tìm không tồn tại. Cần hỗ trợ máy in? Gọi ngay cho chúng tôi.</p>
+      <CtaButtons center />
+      <p style="margin-top:24px"><a href="/" style="color:var(--brand);font-weight:600">← Về trang chủ</a></p>
+    </div>
+  </section>
+</Base>

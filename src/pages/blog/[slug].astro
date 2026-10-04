@@ -1,0 +1,83 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaButtons from '../../components/CtaButtons.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import Icon from '../../components/Icon.astro';
+import { settings, getPosts, formatDate, breadcrumbSchema } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((p) => ({ params: { slug: p.id }, props: { post: p, all: posts } }));
+}
+
+const { post, all } = Astro.props;
+const { data } = post;
+const { Content } = await render(post);
+const related = all.filter((p) => p.id !== post.id).slice(0, 3);
+const crumbs = [
+  { name: 'Trang chủ', href: '/' },
+  { name: 'Blog', href: '/blog' },
+  { name: data.title, href: `/blog/${post.id}` },
+];
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: data.title,
+  description: data.description,
+  datePublished: data.publishDate.toISOString(),
+  dateModified: (data.updatedDate ?? data.publishDate).toISOString(),
+  ...(data.cover ? { image: new URL(data.cover, Astro.site).href } : {}),
+  author: { '@type': 'Organization', name: settings.brand },
+  publisher: { '@id': `${new URL('/', Astro.site).href}#business` },
+  mainEntityOfPage: new URL(`/blog/${post.id}`, Astro.site).href,
+};
+---
+<Base
+  title={`${data.title} | ${settings.brand}`}
+  description={data.description}
+  image={data.cover}
+  type="article"
+  schema={[articleSchema, breadcrumbSchema(Astro.site, crumbs)]}
+>
+  <div class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>{data.title}</h1>
+      <p class="meta">Đăng ngày {formatDate(data.publishDate)}{data.updatedDate && ` · Cập nhật ${formatDate(data.updatedDate)}`}</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap page-body">
+      <article class="article">
+        {data.cover && <img class="article-cover" src={data.cover} alt={data.title} />}
+        <div class="prose"><Content /></div>
+        {data.tags.length > 0 && <div class="tags">{data.tags.map((t) => <span>#{t}</span>)}</div>}
+        <div class="cta-box">
+          <p>Không muốn tự làm? Gọi kỹ thuật viên đến tận nơi trong 30 phút.</p>
+          <CtaButtons center />
+        </div>
+      </article>
+      <aside><LeadForm title="Cần hỗ trợ ngay?" /></aside>
+    </div>
+  </section>
+
+  {related.length > 0 && (
+    <section class="bg-soft">
+      <div class="wrap">
+        <h2>Bài viết liên quan</h2>
+        <p class="sub">Thêm kiến thức hữu ích về máy in.</p>
+        <div class="posts">
+          {related.map((p) => (
+            <a class="post" href={`/blog/${p.id}`}>
+              <div class="post-img">{p.data.cover ? <img src={p.data.cover} alt="" loading="lazy" /> : <Icon name="printer" />}</div>
+              <div class="post-body"><p class="meta">{formatDate(p.data.publishDate)}</p><h3>{p.data.title}</h3><p>{p.data.description}</p></div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</Base>

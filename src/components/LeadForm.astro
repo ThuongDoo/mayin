@@ -1,0 +1,34 @@
+---
+import { getServices } from '../lib/site';
+interface Props { title?: string; selected?: string; area?: string }
+const { title = 'Đặt lịch nhanh', selected, area = '' } = Astro.props;
+const services = await getServices();
+const uid = Math.random().toString(36).slice(2, 7);
+---
+<div class="card form-card" id="dat-lich">
+  <p class="form-title">{title}</p>
+  <p class="note">Để lại số điện thoại, chúng tôi gọi lại trong 5 phút.</p>
+  <form class="js-lead-form" novalidate>
+    <div class="field">
+      <label for={`n-${uid}`}>Họ tên</label>
+      <input id={`n-${uid}`} name="name" placeholder="VD: Anh Minh" autocomplete="name" />
+    </div>
+    <div class="field">
+      <label for={`p-${uid}`}>Số điện thoại *</label>
+      <input id={`p-${uid}`} name="phone" type="tel" inputmode="tel" placeholder="09xx xxx xxx" autocomplete="tel" required />
+    </div>
+    <div class="field">
+      <label for={`s-${uid}`}>Dịch vụ cần</label>
+      <select id={`s-${uid}`} name="service">
+        {services.map((s) => <option selected={s.data.title === selected}>{s.data.title}</option>)}
+        <option>Khác / chưa rõ lỗi</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for={`a-${uid}`}>Địa chỉ (quận/phường)</label>
+      <input id={`a-${uid}`} name="address" value={area} placeholder="VD: Cầu Giấy" autocomplete="street-address" />
+    </div>
+    <button class="btn btn-call" type="submit">Gửi yêu cầu – Gọi lại ngay</button>
+    <div class="form-msg" role="status"></div>
+  </form>
+</div>

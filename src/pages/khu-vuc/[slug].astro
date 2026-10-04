@@ -1,0 +1,92 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaButtons from '../../components/CtaButtons.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import ServiceGrid from '../../components/ServiceGrid.astro';
+import PriceTable from '../../components/PriceTable.astro';
+import Faq from '../../components/Faq.astro';
+import Icon from '../../components/Icon.astro';
+import { settings, home, getAreas, faqSchema, breadcrumbSchema } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const areas = await getAreas();
+  return areas.map((a) => ({ params: { slug: a.id }, props: { area: a, all: areas } }));
+}
+
+const { area, all } = Astro.props;
+const name = area.data.name;
+const { Content } = await render(area);
+const others = all.filter((a) => a.id !== area.id);
+const crumbs = [
+  { name: 'Trang chủ', href: '/' },
+  { name: 'Khu vực', href: '/khu-vuc' },
+  { name, href: `/khu-vuc/${area.id}` },
+];
+const { wards, landmarks } = area.data;
+const travelTime = area.data.travelTime || '30 phút';
+const intro = area.data.intro ||
+  `Bạn ở ${name} và cần nạp mực, sửa máy in gấp? Kỹ thuật viên của ${settings.brand} thường trực tại ${name}, có mặt sau khoảng ${travelTime}, kiểm tra miễn phí và báo giá trước khi làm.`;
+---
+<Base
+  title={`Nạp mực, sửa máy in tận nhà ${name} – Có mặt ${travelTime} | ${settings.brand}`}
+  description={area.data.description || `Dịch vụ nạp mực, đổ mực, sửa máy in tận nơi tại ${name}, ${settings.city}. Có mặt nhanh, kiểm tra miễn phí, giá từ ${settings.priceFrom}. Gọi ${settings.phoneText}.`}
+  schema={[breadcrumbSchema(Astro.site, crumbs), faqSchema(home.faq)]}
+>
+  <div class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>Nạp mực, sửa máy in tận nhà tại {name}</h1>
+      <p class="lead">{intro}</p>
+      <CtaButtons />
+      <p class="price-tag">Nạp mực tại {name} chỉ từ <b>{settings.priceFrom}</b></p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap page-body">
+      <div>
+        <h2 style="text-align:left">Dịch vụ tại {name}</h2>
+        <p class="sub" style="text-align:left;margin-left:0">Kỹ thuật viên mang đủ mực và linh kiện, xử lý tại chỗ.</p>
+        <ServiceGrid />
+        <div class="prose" style="margin-top:32px">
+          {wards.length > 0 && (
+            <>
+              <h2>Phục vụ tận nơi các phường tại {name}</h2>
+              <p>Kỹ thuật viên có mặt sau khoảng {travelTime} tại: {wards.map((w, i) => <>{i > 0 && ', '}<strong>{w}</strong></>)}.</p>
+            </>
+          )}
+          {landmarks && (
+            <>
+              <h2>Các tuyến phố, khu văn phòng thường phục vụ tại {name}</h2>
+              <p>{landmarks}</p>
+            </>
+          )}
+          <Content />
+        </div>
+      </div>
+      <aside><LeadForm area={name} /></aside>
+    </div>
+  </section>
+
+  <section class="bg-soft">
+    <div class="wrap">
+      <h2>Bảng giá tại {name}</h2>
+      <p class="sub">Đã bao gồm công đến tận nơi.</p>
+      <PriceTable />
+    </div>
+  </section>
+
+  <Faq items={home.faq} />
+
+  {others.length > 0 && (
+    <section>
+      <div class="wrap">
+        <h2>Khu vực lân cận</h2>
+        <p class="sub">Chúng tôi cũng phục vụ các quận khác tại {settings.city}.</p>
+        <div class="chips">{others.map((a) => <a href={`/khu-vuc/${a.id}`}><Icon name="pin" />{a.data.name}</a>)}</div>
+      </div>
+    </section>
+  )}
+</Base>

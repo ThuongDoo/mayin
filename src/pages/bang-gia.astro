@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CtaButtons from '../components/CtaButtons.astro';
+import PriceTable from '../components/PriceTable.astro';
+import Faq from '../components/Faq.astro';
+import { settings, home, pricing, breadcrumbSchema, faqSchema } from '../lib/site';
+
+const crumbs = [{ name: 'Trang chủ', href: '/' }, { name: 'Bảng giá', href: '/bang-gia' }];
+---
+<Base
+  title={pricing.seoTitle || `Bảng giá nạp mực, sửa máy in | ${settings.brand}`}
+  description={pricing.seoDescription}
+  schema={[breadcrumbSchema(Astro.site, crumbs), faqSchema(home.faq)]}
+>
+  <div class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>Bảng giá nạp mực & sửa máy in</h1>
+      <p class="lead">Giá đã gồm công đến tận nơi tại {settings.city}. Kiểm tra miễn phí, báo giá trước khi làm.</p>
+      <CtaButtons />
+    </div>
+  </div>
+  <section>
+    <div class="wrap"><PriceTable /></div>
+  </section>
+  <Faq items={home.faq} />
+</Base>

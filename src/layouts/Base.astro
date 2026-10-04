@@ -1,0 +1,93 @@
+---
+import '@fontsource/be-vietnam-pro/400.css';
+import '@fontsource/be-vietnam-pro/500.css';
+import '@fontsource/be-vietnam-pro/600.css';
+import '@fontsource/be-vietnam-pro/700.css';
+import '@fontsource/be-vietnam-pro/800.css';
+import '../styles/global.css';
+// Tải trước font chính để chữ không bị "nhảy" khi font tải xong (giảm CLS)
+import fLatin400 from '@fontsource/be-vietnam-pro/files/be-vietnam-pro-latin-400-normal.woff2?url';
+import fLatin800 from '@fontsource/be-vietnam-pro/files/be-vietnam-pro-latin-800-normal.woff2?url';
+import fViet400 from '@fontsource/be-vietnam-pro/files/be-vietnam-pro-vietnamese-400-normal.woff2?url';
+import fViet800 from '@fontsource/be-vietnam-pro/files/be-vietnam-pro-vietnamese-800-normal.woff2?url';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FloatingCta from '../components/FloatingCta.astro';
+import { settings, localBusinessSchema, getAreas } from '../lib/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string | null;
+  type?: 'website' | 'article';
+  schema?: (object | null)[];
+  noindex?: boolean;
+}
+
+const { title, description = '', image, type = 'website', schema = [], noindex = false } = Astro.props;
+const cleanPath = Astro.url.pathname.replace(/(\/index)?\.html$/, '').replace(/(.)\/$/, '$1') || '/';
+const canonical = new URL(cleanPath, Astro.site).href;
+const ogImage = image || settings.ogImage;
+const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : null;
+const areaNames = (await getAreas()).map((a) => a.data.name);
+const jsonLd = [localBusinessSchema(Astro.site, areaNames), ...schema].filter(Boolean);
+
+const track = {
+  formEndpoint: settings.formEndpoint,
+  zaloHref: `https://zalo.me/${settings.zalo}`,
+  phoneText: settings.phoneText,
+  adsId: settings.googleAdsId,
+  adsLabelCall: settings.adsLabelCall,
+  adsLabelLead: settings.adsLabelLead,
+};
+const gtagId = settings.ga4Id || settings.googleAdsId;
+---
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  {description && <meta name="description" content={description} />}
+  <link rel="canonical" href={canonical} />
+  {noindex && <meta name="robots" content="noindex" />}
+  {settings.gscVerification && <meta name="google-site-verification" content={settings.gscVerification} />}
+  {[fLatin400, fLatin800, fViet400, fViet800].map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+
+  <meta property="og:type" content={type} />
+  <meta property="og:locale" content="vi_VN" />
+  <meta property="og:site_name" content={settings.brand} />
+  <meta property="og:title" content={title} />
+  {description && <meta property="og:description" content={description} />}
+  <meta property="og:url" content={canonical} />
+  {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+  <meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
+
+  {jsonLd.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+
+  <script is:inline set:html={`window.__SITE=${JSON.stringify(track)};`} />
+
+  {gtagId && (
+    <>
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}></script>
+      <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());${
+        [settings.ga4Id, settings.googleAdsId].filter(Boolean).map((id) => `gtag('config','${id}');`).join('')
+      }`} />
+    </>
+  )}
+  {settings.fbPixelId && (
+    <script is:inline set:html={`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${settings.fbPixelId}');fbq('track','PageView');`} />
+  )}
+</head>
+<body>
+  <Header />
+  <main><slot /></main>
+  <Footer />
+  <FloatingCta />
+  <script>
+    import '../scripts/main.ts';
+  </script>
+</body>
+</html>

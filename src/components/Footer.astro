@@ -1,0 +1,35 @@
+---
+import { settings, telHref, zaloHref, getServices, getAreas } from '../lib/site';
+const services = await getServices();
+const areas = await getAreas();
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div>
+      <p class="f-title">{settings.brand}</p>
+      <p>{settings.tagline}.</p>
+      <p>Địa chỉ: {settings.address}</p>
+      <p>Hotline: <a href={telHref}>{settings.phoneText}</a> · Zalo: <a href={zaloHref} target="_blank" rel="noopener">{settings.phoneText}</a></p>
+      <p>Giờ làm việc: {settings.hours}</p>
+    </div>
+    <div>
+      <p class="f-title">Dịch vụ</p>
+      <ul>{services.map((s) => <li><a href={`/dich-vu/${s.id}`}>{s.data.title}</a></li>)}</ul>
+    </div>
+    <div>
+      <p class="f-title">Khu vực</p>
+      <ul>{areas.map((a) => <li><a href={`/khu-vuc/${a.id}`}>{a.data.name}</a></li>)}</ul>
+    </div>
+    <div>
+      <p class="f-title">Thông tin</p>
+      <ul>
+        <li><a href="/bang-gia">Bảng giá</a></li>
+        <li><a href="/nap-muc">Tra mã hộp mực</a></li>
+        <li><a href="/lien-he">Liên hệ</a></li>
+        <li><a href="/blog">Blog kiến thức</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap copy">© {year} {settings.brand}</div>
+</footer>

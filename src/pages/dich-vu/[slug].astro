@@ -1,0 +1,80 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaButtons from '../../components/CtaButtons.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import ServiceGrid from '../../components/ServiceGrid.astro';
+import Faq from '../../components/Faq.astro';
+import Icon from '../../components/Icon.astro';
+import CartridgeLinks from '../../components/CartridgeLinks.astro';
+import { settings, getServices, getAreas, faqSchema, breadcrumbSchema } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const services = await getServices();
+  return services.map((s) => ({ params: { slug: s.id }, props: { service: s } }));
+}
+
+const { service } = Astro.props;
+const { data } = service;
+const { Content } = await render(service);
+const areas = await getAreas();
+const crumbs = [
+  { name: 'Trang chủ', href: '/' },
+  { name: 'Dịch vụ', href: '/dich-vu' },
+  { name: data.title, href: `/dich-vu/${service.id}` },
+];
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: data.title,
+  description: data.description || data.shortDesc,
+  areaServed: settings.city,
+  provider: { '@id': `${new URL('/', Astro.site).href}#business` },
+  ...(data.priceFrom ? { offers: { '@type': 'Offer', priceCurrency: 'VND', price: data.priceFrom.replace(/\D/g, '') } } : {}),
+};
+---
+<Base
+  title={data.seoTitle || `${data.title} tận nơi ${settings.city} | ${settings.brand}`}
+  description={data.description || data.shortDesc}
+  schema={[serviceSchema, breadcrumbSchema(Astro.site, crumbs), faqSchema(data.faq)]}
+>
+  <div class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>{data.title} tận nơi tại {settings.city}</h1>
+      <p class="lead">{data.shortDesc}</p>
+      <CtaButtons />
+      {data.priceFrom && <p class="price-tag">Giá chỉ từ <b>{data.priceFrom}</b> – kiểm tra miễn phí</p>}
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap page-body">
+      <article class="prose"><Content /></article>
+      <aside><LeadForm selected={data.title} /></aside>
+    </div>
+  </section>
+
+  {data.icon === 'drop' && <CartridgeLinks />}
+
+  <Faq items={data.faq} title={`Hỏi đáp về ${data.title.toLowerCase()}`} />
+
+  {areas.length > 0 && (
+    <section>
+      <div class="wrap">
+        <h2>{data.title} tại các khu vực</h2>
+        <p class="sub">Có mặt nhanh tại các quận {settings.city}.</p>
+        <div class="chips">{areas.map((a) => <a href={`/khu-vuc/${a.id}`}><Icon name="pin" />{a.data.name}</a>)}</div>
+      </div>
+    </section>
+  )}
+
+  <section class="bg-soft">
+    <div class="wrap">
+      <h2>Dịch vụ khác</h2>
+      <p class="sub">Một lần gọi – xử lý mọi vấn đề máy in.</p>
+      <ServiceGrid exclude={service.id} />
+    </div>
+  </section>
+</Base>

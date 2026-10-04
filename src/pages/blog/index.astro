@@ -1,0 +1,38 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Icon from '../../components/Icon.astro';
+import { settings, getPosts, formatDate, breadcrumbSchema } from '../../lib/site';
+
+const posts = await getPosts();
+const crumbs = [{ name: 'Trang chủ', href: '/' }, { name: 'Blog', href: '/blog' }];
+---
+<Base
+  title={`Blog kiến thức máy in, mực in | ${settings.brand}`}
+  description="Mẹo sử dụng máy in, cách tiết kiệm mực, nhận biết và tự xử lý các lỗi máy in thường gặp tại nhà và văn phòng."
+  schema={[breadcrumbSchema(Astro.site, crumbs)]}
+>
+  <div class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>Blog kiến thức máy in</h1>
+      <p class="lead">Mẹo sử dụng, tiết kiệm mực và xử lý lỗi máy in thường gặp.</p>
+    </div>
+  </div>
+  <section>
+    <div class="wrap">
+      <div class="posts">
+        {posts.map((p) => (
+          <a class="post" href={`/blog/${p.id}`}>
+            <div class="post-img">{p.data.cover ? <img src={p.data.cover} alt="" loading="lazy" /> : <Icon name="printer" />}</div>
+            <div class="post-body">
+              <p class="meta">{formatDate(p.data.publishDate)}</p>
+              <h2>{p.data.title}</h2>
+              <p>{p.data.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

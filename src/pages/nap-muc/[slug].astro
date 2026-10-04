@@ -1,0 +1,110 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaButtons from '../../components/CtaButtons.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import Faq from '../../components/Faq.astro';
+import { settings, getCartridges, faqSchema, breadcrumbSchema } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const all = await getCartridges();
+  return all.map((c) => ({ params: { slug: c.id }, props: { item: c, all } }));
+}
+
+const { item, all } = Astro.props;
+const d = item.data;
+const { Content } = await render(item);
+const label = d.code ? `${d.name} (${d.code})` : d.name;
+const price = d.price || settings.priceFrom;
+const printersShort = d.printers.slice(0, 3).join(', ');
+const sameBrand = all.filter((c) => c.id !== item.id && c.data.brand === d.brand);
+const crumbs = [
+  { name: 'Trang chủ', href: '/' },
+  { name: 'Nạp mực theo mã hộp mực', href: '/nap-muc' },
+  { name: `Nạp mực ${d.name}`, href: `/nap-muc/${item.id}` },
+];
+
+// Câu hỏi tự sinh từ dữ liệu – mỗi trang một bộ riêng, cộng thêm câu hỏi nhập trong CMS
+const faq = [
+  { q: `Nạp mực ${d.name} giá bao nhiêu?`, a: `Giá nạp mực ${label} tận nơi tại ${settings.city} từ ${price}, đã gồm công đến tận nhà trong nội thành. Kiểm tra hộp mực miễn phí trước khi nạp.` },
+  ...(d.yield ? [{ q: `Hộp mực ${d.name} nạp một lần in được bao nhiêu trang?`, a: `Mỗi lần nạp in được khoảng ${d.yield} khổ A4 (độ phủ 5%). Số trang thực tế phụ thuộc nội dung in.` }] : []),
+  ...(d.printers.length ? [{ q: `Máy in nào dùng hộp mực ${d.name}?`, a: `Hộp mực ${label} dùng cho các máy: ${d.printers.join(', ')}.` }] : []),
+  { q: `Nạp mực ${d.name} mất bao lâu?`, a: `Kỹ thuật viên có mặt sau khoảng 30 phút, nạp mực và in thử mất 10–15 phút ngay tại chỗ.` },
+  ...d.faq,
+];
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: `Nạp mực ${label}`,
+  serviceType: 'Nạp mực máy in',
+  areaServed: settings.city,
+  provider: { '@id': `${new URL('/', Astro.site).href}#business` },
+  offers: { '@type': 'Offer', priceCurrency: 'VND', price: price.replace(/\D/g, '') },
+};
+---
+<Base
+  title={`Nạp mực ${label} tận nơi ${settings.city} – Giá ${price}`}
+  description={d.description || `Nạp mực ${label}${d.printers.length ? ` cho máy ${d.printers.slice(0, 2).join(', ')}` : ''} tận nơi ${settings.city}. Giá ${price}, có mặt sau 30 phút, in thử trước khi thanh toán.`}
+  schema={[serviceSchema, breadcrumbSchema(Astro.site, crumbs), faqSchema(faq)]}
+>
+  <div class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>Nạp mực {label} tận nơi tại {settings.city}</h1>
+      <p class="lead">
+        Nạp mực hộp {d.name}{printersShort && ` cho máy ${printersShort}`}… Kỹ thuật viên đến tận nhà, nạp trong 15 phút, in thử đạt yêu cầu mới thanh toán.
+      </p>
+      <CtaButtons />
+      <p class="price-tag">Giá nạp mực {d.name}: <b>{price}</b></p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap page-body">
+      <article class="prose">
+        <h2>Thông tin hộp mực {d.name}</h2>
+        <table>
+          <tbody>
+            {d.code && <tr><th>Mã hộp mực gốc</th><td>{d.code}</td></tr>}
+            <tr><th>Hãng</th><td>{d.brand}</td></tr>
+            {d.yield && <tr><th>Số trang mỗi lần nạp</th><td>{d.yield} (A4, độ phủ 5%)</td></tr>}
+            <tr><th>Giá nạp tận nơi</th><td>{price}</td></tr>
+            <tr><th>Thời gian nạp</th><td>10–15 phút tại chỗ</td></tr>
+            <tr><th>Bảo hành</th><td>Đến khi hết mực</td></tr>
+          </tbody>
+        </table>
+
+        {d.printers.length > 0 && (
+          <>
+            <h2>Máy in dùng hộp mực {d.name}</h2>
+            <p>Nếu bạn đang dùng một trong các máy in dưới đây, hộp mực của bạn là {label}:</p>
+            <ul>{d.printers.map((p) => <li>Nạp mực máy in {p}</li>)}</ul>
+          </>
+        )}
+
+        <h2>Quy trình nạp mực {d.name} tận nơi</h2>
+        <ol>
+          <li>Tháo hộp mực, vệ sinh sạch mực thải và bụi giấy.</li>
+          <li>Kiểm tra trống, gạt, trục từ – báo ngay nếu linh kiện đã mòn.</li>
+          <li>Nạp đúng loại mực cho {d.name}, đủ định lượng.</li>
+          <li>Lắp lại và in thử trước mặt bạn.</li>
+        </ol>
+        <Content />
+      </article>
+      <aside><LeadForm title={`Đặt lịch nạp mực ${d.name}`} /></aside>
+    </div>
+  </section>
+
+  <Faq items={faq} title={`Hỏi đáp về nạp mực ${d.name}`} />
+
+  {sameBrand.length > 0 && (
+    <section>
+      <div class="wrap">
+        <h2>Hộp mực {d.brand} khác</h2>
+        <p class="sub">Nạp mực tận nơi cho mọi dòng hộp mực {d.brand}.</p>
+        <div class="chips">{sameBrand.map((c) => <a href={`/nap-muc/${c.id}`}>Nạp mực {c.data.name}</a>)}</div>
+      </div>
+    </section>
+  )}
+</Base>

@@ -1,0 +1,10 @@
+---
+import Icon from './Icon.astro';
+import { telHref, zaloHref } from '../lib/site';
+---
+<a class="float-zalo" href={zaloHref} target="_blank" rel="noopener" aria-label="Nhắn Zalo">Zalo</a>
+<a class="float-call" href={telHref} aria-label="Gọi điện"><Icon name="phone" /></a>
+<div class="float-bar">
+  <a class="btn btn-zalo" href={zaloHref} target="_blank" rel="noopener">Zalo</a>
+  <a class="btn btn-call" href={telHref}><Icon name="phone" />Gọi ngay</a>
+</div>

@@ -1,0 +1,13 @@
+{
+  "seoTitle": "Bảng giá nạp mực, sửa máy in tận nhà mới nhất",
+  "seoDescription": "Bảng giá nạp mực máy in laser, bơm mực máy in phun, thay trống, sửa kẹt giấy tận nơi. Giá đã gồm công đến tận nhà, báo giá trước khi làm.",
+  "items": [
+    { "name": "Nạp mực laser đen trắng", "note": "HP 12A, 85A, 78A, Canon 2900, Brother…", "price": "80.000đ" },
+    { "name": "Nạp mực hộp mực dung lượng lớn", "note": "HP 05A, 26A, Canon 319, 328…", "price": "120.000đ" },
+    { "name": "Bơm mực máy in phun / màu", "note": "Epson L-series, Canon G-series… (mỗi màu)", "price": "50.000đ" },
+    { "name": "Thay trống (drum)", "note": "Bao gồm nạp mực", "price": "180.000đ" },
+    { "name": "Sửa kẹt giấy, không kéo giấy", "note": "", "price": "150.000đ" },
+    { "name": "Cài đặt driver, in qua mạng", "note": "", "price": "100.000đ" }
+  ],
+  "note": "Giá có thể thay đổi tùy model máy. Giá đã gồm công đến tận nơi trong nội thành. Kiểm tra lỗi miễn phí – không sửa không mất phí."
+}

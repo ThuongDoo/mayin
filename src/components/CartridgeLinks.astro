@@ -1,0 +1,13 @@
+---
+import { getCartridges } from '../lib/site';
+const all = await getCartridges();
+---
+{all.length > 0 && (
+  <section>
+    <div class="wrap">
+      <h2>Nạp mực theo mã hộp mực</h2>
+      <p class="sub">Chọn đúng hộp mực máy in của bạn để xem giá và số trang in. <a href="/nap-muc" style="color:var(--brand);font-weight:600">Xem bảng tra cứu đầy đủ →</a></p>
+      <div class="chips">{all.map((c) => <a href={`/nap-muc/${c.id}`}>Nạp mực {c.data.name}</a>)}</div>
+    </div>
+  </section>
+)}

@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CtaButtons from '../components/CtaButtons.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { settings, telHref, zaloHref, breadcrumbSchema } from '../lib/site';
+
+const crumbs = [{ name: 'Trang chủ', href: '/' }, { name: 'Liên hệ', href: '/lien-he' }];
+---
+<Base
+  title={`Liên hệ ${settings.brand} – Nạp mực, sửa máy in ${settings.city}`}
+  description={`Địa chỉ, số điện thoại, Zalo và giờ làm việc của ${settings.brand}. Gọi ${settings.phoneText} để kỹ thuật viên đến tận nơi.`}
+  schema={[breadcrumbSchema(Astro.site, crumbs)]}
+>
+  <div class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>Liên hệ {settings.brand}</h1>
+      <p class="lead">Gọi điện hoặc nhắn Zalo – kỹ thuật viên đến tận nơi sau khoảng 30 phút.</p>
+      <CtaButtons />
+    </div>
+  </div>
+  <section>
+    <div class="wrap page-body">
+      <div class="prose">
+        <h2>Thông tin liên hệ</h2>
+        <ul>
+          <li><strong>Địa chỉ:</strong> {settings.address}</li>
+          <li><strong>Hotline:</strong> <a href={telHref}>{settings.phoneText}</a></li>
+          <li><strong>Zalo:</strong> <a href={zaloHref} target="_blank" rel="noopener">{settings.phoneText}</a></li>
+          {settings.email && <li><strong>Email:</strong> <a href={`mailto:${settings.email}`}>{settings.email}</a></li>}
+          <li><strong>Giờ làm việc:</strong> {settings.hours}</li>
+          {settings.mapUrl && <li><a href={settings.mapUrl} target="_blank" rel="noopener">Xem trên Google Maps</a></li>}
+          {settings.facebook && <li><a href={settings.facebook} target="_blank" rel="noopener">Fanpage Facebook</a></li>}
+        </ul>
+        {settings.mapEmbed && (
+          <iframe src={settings.mapEmbed} title={`Bản đồ ${settings.brand}`} width="100%" height="380" style="border:0;border-radius:16px" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        )}
+      </div>
+      <aside><LeadForm /></aside>
+    </div>
+  </section>
+</Base>

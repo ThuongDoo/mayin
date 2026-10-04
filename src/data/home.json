@@ -1,0 +1,43 @@
+{
+  "seoTitle": "Nạp mực, sửa máy in tận nhà Hà Nội – Có mặt sau 30 phút",
+  "seoDescription": "Dịch vụ nạp mực, đổ mực, sửa máy in tận nơi tại nhà và văn phòng ở Hà Nội. Kiểm tra miễn phí, báo giá trước, bảo hành rõ ràng. Gọi ngay!",
+  "heroBadge": "Kỹ thuật viên đang trực – nhận lịch ngay",
+  "heroTitle": "Nạp mực & sửa máy in tận nhà – có mặt sau 30 phút",
+  "heroHighlight": "tận nhà",
+  "heroLead": "Máy in mờ, kẹt giấy, báo lỗi, hết mực? Gọi một cuộc – kỹ thuật viên đến tận nơi, kiểm tra miễn phí, báo giá trước khi làm.",
+  "checks": [
+    "Kiểm tra & báo giá miễn phí",
+    "Mực chất lượng cao, in đậm nét",
+    "Bảo hành rõ ràng, có phiếu",
+    "Phục vụ cả thứ 7, Chủ nhật"
+  ],
+  "stats": [
+    { "value": "30'", "label": "Có mặt nhanh nội thành" },
+    { "value": "0đ", "label": "Phí kiểm tra" },
+    { "value": "7/7", "label": "Làm cả cuối tuần" },
+    { "value": "VAT", "label": "Xuất hóa đơn cho công ty" }
+  ],
+  "steps": [
+    { "title": "Gọi điện / nhắn Zalo", "text": "Mô tả lỗi hoặc gửi ảnh máy in, model hộp mực." },
+    { "title": "Kỹ thuật viên đến", "text": "Có mặt tận nơi trong khoảng 30–60 phút." },
+    { "title": "Kiểm tra & báo giá", "text": "Báo giá rõ ràng, bạn đồng ý mới tiến hành." },
+    { "title": "In thử & bảo hành", "text": "In thử đạt yêu cầu mới thanh toán, có phiếu bảo hành." }
+  ],
+  "reasons": [
+    { "title": "Có mặt nhanh", "text": "Kỹ thuật viên trực khắp các quận, đến ngay khi bạn cần." },
+    { "title": "Giá minh bạch", "text": "Báo giá trước, không vẽ bệnh, không phát sinh chi phí ẩn." },
+    { "title": "Bảo hành rõ ràng", "text": "Bảo hành mực theo hộp, linh kiện 3–6 tháng, lỗi là đến ngay." }
+  ],
+  "brands": ["HP", "Canon", "Brother", "Epson", "Samsung", "Xerox", "Ricoh", "Kyocera", "Pantum"],
+  "reviews": [],
+  "faq": [
+    { "q": "Bao lâu thì kỹ thuật viên có mặt?", "a": "Trong nội thành thường từ 30–60 phút sau khi bạn gọi. Bạn cũng có thể hẹn giờ cụ thể." },
+    { "q": "Phí đi lại và phí kiểm tra là bao nhiêu?", "a": "Miễn phí kiểm tra và đi lại trong nội thành. Nếu bạn không đồng ý sửa, bạn không mất phí." },
+    { "q": "Nạp mực có ảnh hưởng đến máy in không?", "a": "Chúng tôi dùng mực đúng loại cho từng dòng máy và vệ sinh hộp mực trước khi nạp, nên không ảnh hưởng đến máy." },
+    { "q": "Một lần nạp mực in được bao nhiêu trang?", "a": "Tùy loại hộp mực, thường khoảng 1.500–2.500 trang A4 (độ phủ 5%) với hộp mực laser phổ thông." },
+    { "q": "Có xuất hóa đơn VAT cho công ty không?", "a": "Có. Chúng tôi nhận hợp đồng nạp mực, bảo trì định kỳ và xuất hóa đơn đầy đủ." },
+    { "q": "Bảo hành như thế nào?", "a": "Mực được bảo hành đến khi hết mực trong hộp; linh kiện thay mới bảo hành 3–6 tháng. Lỗi trong thời gian bảo hành, chúng tôi đến xử lý miễn phí." }
+  ],
+  "finalTitle": "Máy in đang gặp sự cố?",
+  "finalText": "Đừng để công việc bị gián đoạn – gọi ngay, kỹ thuật viên đến trong 30 phút."
+}

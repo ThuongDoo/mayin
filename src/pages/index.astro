@@ -1,0 +1,138 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import CtaButtons from '../components/CtaButtons.astro';
+import LeadForm from '../components/LeadForm.astro';
+import ServiceGrid from '../components/ServiceGrid.astro';
+import PriceTable from '../components/PriceTable.astro';
+import Faq from '../components/Faq.astro';
+import CartridgeLinks from '../components/CartridgeLinks.astro';
+import { settings, home, getAreas, getPosts, faqSchema, formatDate } from '../lib/site';
+
+const areas = await getAreas();
+const posts = (await getPosts()).slice(0, 3);
+const [before, after] = home.heroHighlight && home.heroTitle.includes(home.heroHighlight)
+  ? home.heroTitle.split(home.heroHighlight)
+  : [home.heroTitle, null];
+const reasonIcons = ['clock', 'tag', 'shield', 'check', 'tool', 'printer'];
+---
+<Base title={home.seoTitle} description={home.seoDescription} schema={[faqSchema(home.faq)]}>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="badge"><span class="dot"></span>{home.heroBadge}</div>
+        <h1>{before}{after !== null && <><em>{home.heroHighlight}</em>{after}</>}</h1>
+        <p class="lead">{home.heroLead}</p>
+        <ul class="checks">
+          {home.checks.map((c) => <li><Icon name="check" />{c}</li>)}
+        </ul>
+        <CtaButtons />
+        <p class="price-tag">Nạp mực chỉ từ <b>{settings.priceFrom}</b> – không phát sinh chi phí ẩn</p>
+      </div>
+      <LeadForm />
+    </div>
+  </section>
+
+  {home.stats.length > 0 && (
+    <div class="stats">
+      <div class="wrap">{home.stats.map((s) => <div><b>{s.value}</b><span>{s.label}</span></div>)}</div>
+    </div>
+  )}
+
+  <section id="dich-vu">
+    <div class="wrap">
+      <h2>Dịch vụ của chúng tôi</h2>
+      <p class="sub">Xử lý mọi vấn đề máy in cho gia đình, văn phòng, cửa hàng – ngay tại chỗ.</p>
+      <ServiceGrid />
+    </div>
+  </section>
+
+  <section class="bg-soft" id="bang-gia">
+    <div class="wrap">
+      <h2>Bảng giá tham khảo</h2>
+      <p class="sub">Báo giá chính xác trước khi làm – bạn đồng ý mới tiến hành.</p>
+      <PriceTable />
+    </div>
+  </section>
+
+  <section id="quy-trinh">
+    <div class="wrap">
+      <h2>Quy trình {home.steps.length} bước đơn giản</h2>
+      <p class="sub">Nhanh gọn, minh bạch – bạn không cần mang máy đi đâu cả.</p>
+      <div class="steps">
+        {home.steps.map((s, i) => <div class="step"><div class="num">{i + 1}</div><h3>{s.title}</h3><p>{s.text}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="why">
+    <div class="wrap">
+      <h2>Vì sao khách hàng chọn chúng tôi?</h2>
+      <p class="sub">Làm thật – giá thật – bảo hành thật.</p>
+      <div class="grid-3">
+        {home.reasons.map((r, i) => <div class="why-item"><h3><Icon name={reasonIcons[i % reasonIcons.length]} />{r.title}</h3><p>{r.text}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Nhận mọi hãng máy in</h2>
+      <p class="sub">Máy in laser, máy in phun, máy in màu, máy đa chức năng.</p>
+      <div class="chips">{home.brands.map((b) => <span>{b}</span>)}</div>
+    </div>
+  </section>
+
+  <CartridgeLinks />
+
+  {home.reviews.length > 0 && (
+    <section class="bg-soft">
+      <div class="wrap">
+        <h2>Khách hàng nói gì</h2>
+        <p class="sub">Cảm nhận của khách hàng đã sử dụng dịch vụ.</p>
+        <div class="grid-3">
+          {home.reviews.map((r: any) => (
+            <div class="rev"><div class="stars">★★★★★</div><p>“{r.text}”</p><div class="who">{r.name}<small>{r.place}</small></div></div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {areas.length > 0 && (
+    <section>
+      <div class="wrap">
+        <h2>Khu vực phục vụ</h2>
+        <p class="sub">Có mặt nhanh tại các quận nội thành {settings.city} và lân cận.</p>
+        <div class="chips">{areas.map((a) => <a href={`/khu-vuc/${a.id}`}><Icon name="pin" />{a.data.name}</a>)}</div>
+      </div>
+    </section>
+  )}
+
+  {posts.length > 0 && (
+    <section class="bg-soft">
+      <div class="wrap">
+        <h2>Kiến thức máy in</h2>
+        <p class="sub">Mẹo sử dụng, tiết kiệm mực và tự xử lý lỗi thường gặp.</p>
+        <div class="posts">
+          {posts.map((p) => (
+            <a class="post" href={`/blog/${p.id}`}>
+              <div class="post-img">{p.data.cover ? <img src={p.data.cover} alt="" loading="lazy" /> : <Icon name="printer" />}</div>
+              <div class="post-body"><p class="meta">{formatDate(p.data.publishDate)}</p><h3>{p.data.title}</h3><p>{p.data.description}</p></div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <Faq items={home.faq} />
+
+  <section class="final">
+    <div class="wrap">
+      <h2>{home.finalTitle}</h2>
+      <p>{home.finalText}</p>
+      <CtaButtons center light />
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaButtons from '../../components/CtaButtons.astro';
+import { settings, getCartridges, breadcrumbSchema } from '../../lib/site';
+
+const all = await getCartridges();
+const brands = [...new Set(all.map((c) => c.data.brand))];
+const crumbs = [{ name: 'Trang chủ', href: '/' }, { name: 'Nạp mực theo mã hộp mực', href: '/nap-muc' }];
+---
+<Base
+  title={`Bảng giá nạp mực theo mã hộp mực HP, Canon, Brother | ${settings.brand}`}
+  description={`Tra cứu mã hộp mực theo model máy in và giá nạp mực tận nơi tại ${settings.city}: HP 12A, 85A, 78A, Canon 337, 325, Brother TN-2385…`}
+  schema={[breadcrumbSchema(Astro.site, crumbs)]}
+>
+  <div class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>Nạp mực theo mã hộp mực</h1>
+      <p class="lead">Không biết máy in của bạn dùng hộp mực gì? Tìm model máy in trong bảng dưới đây, hoặc chụp ảnh máy gửi Zalo để được báo giá ngay.</p>
+      <CtaButtons />
+    </div>
+  </div>
+  <section>
+    <div class="wrap">
+      {brands.map((b) => (
+        <div style="margin-bottom:40px">
+          <h2 style="text-align:left">Hộp mực {b}</h2>
+          <div class="ptable" style="max-width:none;margin-top:16px">
+            <div class="prow phead"><span class="name">Hộp mực / Máy in sử dụng</span><span class="val">Giá nạp</span></div>
+            {all.filter((c) => c.data.brand === b).map((c) => (
+              <a class="prow" href={`/nap-muc/${c.id}`}>
+                <span class="name">Nạp mực {c.data.name}{c.data.code && ` (${c.data.code})`}<small>{c.data.printers.join(', ')}</small></span>
+                <span class="val">{c.data.price || settings.priceFrom}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

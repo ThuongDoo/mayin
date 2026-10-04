@@ -1,0 +1,20 @@
+---
+interface Props { items: { q: string; a: string }[]; title?: string }
+const { items, title = 'Câu hỏi thường gặp' } = Astro.props;
+---
+{items.length > 0 && (
+  <section class="faq" id="hoi-dap">
+    <div class="wrap">
+      <h2>{title}</h2>
+      <p class="sub">Chưa thấy câu trả lời? Gọi ngay để được tư vấn miễn phí.</p>
+      <div class="faq-list">
+        {items.map((i) => (
+          <details>
+            <summary>{i.q}</summary>
+            <p>{i.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

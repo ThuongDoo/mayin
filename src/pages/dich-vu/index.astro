@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaButtons from '../../components/CtaButtons.astro';
+import ServiceGrid from '../../components/ServiceGrid.astro';
+import { settings, breadcrumbSchema } from '../../lib/site';
+
+const crumbs = [{ name: 'Trang chủ', href: '/' }, { name: 'Dịch vụ', href: '/dich-vu' }];
+---
+<Base
+  title={`Dịch vụ nạp mực, sửa máy in tận nơi ${settings.city} | ${settings.brand}`}
+  description={`Tổng hợp dịch vụ nạp mực, bơm mực, sửa chữa, thay linh kiện, cài đặt máy in tận nhà tại ${settings.city}. Kiểm tra miễn phí, báo giá trước.`}
+  schema={[breadcrumbSchema(Astro.site, crumbs)]}
+>
+  <div class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>Dịch vụ máy in tận nơi</h1>
+      <p class="lead">Kỹ thuật viên đến tận nhà, văn phòng tại {settings.city} – xử lý xong tại chỗ, có bảo hành.</p>
+      <CtaButtons />
+    </div>
+  </div>
+  <section>
+    <div class="wrap">
+      <h2>Tất cả dịch vụ</h2>
+      <p class="sub">Chọn dịch vụ để xem chi tiết, giá và câu hỏi thường gặp.</p>
+      <ServiceGrid />
+    </div>
+  </section>
+</Base>

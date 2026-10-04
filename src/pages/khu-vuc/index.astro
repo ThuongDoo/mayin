@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaButtons from '../../components/CtaButtons.astro';
+import Icon from '../../components/Icon.astro';
+import { settings, getAreas, breadcrumbSchema } from '../../lib/site';
+
+const areas = await getAreas();
+const crumbs = [{ name: 'Trang chủ', href: '/' }, { name: 'Khu vực phục vụ', href: '/khu-vuc' }];
+---
+<Base
+  title={`Khu vực phục vụ nạp mực, sửa máy in tận nhà ${settings.city}`}
+  description={`Danh sách các quận tại ${settings.city} có dịch vụ nạp mực, sửa máy in tận nơi. Kỹ thuật viên có mặt nhanh sau 30 phút.`}
+  schema={[breadcrumbSchema(Astro.site, crumbs)]}
+>
+  <div class="page-hero">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>Khu vực phục vụ tại {settings.city}</h1>
+      <p class="lead">Chọn khu vực của bạn để xem thời gian có mặt và dịch vụ hỗ trợ.</p>
+      <CtaButtons />
+    </div>
+  </div>
+  <section>
+    <div class="wrap">
+      <div class="chips">{areas.map((a) => <a href={`/khu-vuc/${a.id}`}><Icon name="pin" />{a.data.name}</a>)}</div>
+    </div>
+  </section>
+</Base>
